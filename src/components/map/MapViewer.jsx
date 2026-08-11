@@ -1,7 +1,10 @@
+import { useEffect } from "react";
+
 import {
   MapPin,
   UploadCloud,
 } from "lucide-react";
+
 
 const MOCK_FIELDS = [
   {
@@ -27,27 +30,61 @@ const MOCK_FIELDS = [
   },
 ];
 
+
 function MapViewer({
   selectedIds,
   onSelectionChange,
   uploadRequested,
   onUploadHandled,
 }) {
+  /*
+   * Temporary upload behavior.
+   *
+   * This used to run directly during render:
+   *
+   * if (uploadRequested) {
+   *   setTimeout(() => {
+   *     onUploadHandled();
+   *   }, 0);
+   * }
+   *
+   * That is a render-side effect.
+   * Keep it inside useEffect instead.
+   */
+  useEffect(() => {
+    if (!uploadRequested) {
+      return;
+    }
+
+    onUploadHandled();
+  }, [
+    uploadRequested,
+    onUploadHandled,
+  ]);
+
+
   const toggleField = (id) => {
-    const next = selectedIds.includes(id)
-      ? selectedIds.filter(
-          (selectedId) =>
-            selectedId !== id
-        )
-      : [...selectedIds, id];
+    const next =
+      selectedIds.includes(id)
+        ? selectedIds.filter(
+            (selectedId) =>
+              selectedId !== id
+          )
+        : [
+            ...selectedIds,
+            id,
+          ];
 
     onSelectionChange(next);
   };
 
+
   const selectedFields =
-    MOCK_FIELDS.filter((field) =>
-      selectedIds.includes(field.id)
+    MOCK_FIELDS.filter(
+      (field) =>
+        selectedIds.includes(field.id)
     );
+
 
   const totalArea =
     selectedFields.reduce(
@@ -56,18 +93,11 @@ function MapViewer({
       0
     );
 
-  // Temporary upload behavior.
-  // Brijesh will replace this with real
-  // shapefile / GeoJSON upload.
-  if (uploadRequested) {
-    setTimeout(() => {
-      onUploadHandled();
-    }, 0);
-  }
 
   return (
     <main className="map-workspace">
       <div className="map-background">
+
         <svg
           className="map-contours"
           viewBox="0 0 800 500"
@@ -79,6 +109,7 @@ function MapViewer({
           <path d="M-20 355 C160 300 320 395 490 345 S690 310 840 390" />
           <path d="M-20 450 C120 400 285 495 470 440 S700 395 840 470" />
         </svg>
+
 
         <svg
           className="field-layer"
@@ -110,6 +141,7 @@ function MapViewer({
             }
           )}
         </svg>
+
 
         {MOCK_FIELDS.map(
           (field, index) => {
@@ -157,6 +189,7 @@ function MapViewer({
           }
         )}
 
+
         <div className="map-upload-hint">
           <UploadCloud size={17} />
 
@@ -171,6 +204,7 @@ function MapViewer({
           </div>
         </div>
 
+
         <div className="map-status">
           <MapPin size={14} />
 
@@ -179,8 +213,7 @@ function MapViewer({
             : `${
                 selectedIds.length
               } field${
-                selectedIds.length >
-                1
+                selectedIds.length > 1
                   ? "s"
                   : ""
               } selected · ${totalArea.toFixed(
@@ -188,13 +221,16 @@ function MapViewer({
               )} km²`}
         </div>
 
+
         <div className="map-crs">
           EPSG:4326 · mock map
         </div>
+
       </div>
     </main>
   );
 }
+
 
 export {
   MOCK_FIELDS,
