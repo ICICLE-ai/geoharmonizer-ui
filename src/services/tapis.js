@@ -99,10 +99,32 @@ export function buildCollectArgs(jobSpec) {
 
 
 /*
+ * Batch scheduler flags, passed through to Slurm.
+ *
+ * The allocation to charge is required on OSC systems — a job
+ * without `-A` is rejected before it ever reaches the queue.
+ */
+export const SLURM_ACCOUNT =
+  import.meta.env.VITE_SLURM_ACCOUNT || "PAS2699";
+
+
+export function buildSchedulerOptions() {
+  return [
+    {
+      name: "slurm account",
+
+      arg: `-A ${SLURM_ACCOUNT}`,
+    },
+  ];
+}
+
+
+/*
  * The Tapis job request: which app, on which system and queue, with
- * the collect arguments as appArgs. The four resource fields are only
- * included when the user set them — otherwise Tapis falls back to the
- * app definition and the queue's own defaults.
+ * the collect arguments as appArgs and the scheduler flags as
+ * schedulerOptions. The four resource fields are only included when
+ * the user set them — otherwise Tapis falls back to the app
+ * definition and the queue's own defaults.
  */
 export function buildJobRequest(jobSpec) {
   const request = {
@@ -122,6 +144,8 @@ export function buildJobRequest(jobSpec) {
           include: true,
         })
       ),
+
+      schedulerOptions: buildSchedulerOptions(),
     },
   };
 

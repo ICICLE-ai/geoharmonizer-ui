@@ -27,6 +27,7 @@ import {
   APP_ID,
   APP_VERSION,
   buildCollectArgs,
+  buildSchedulerOptions,
   submitJob,
 } from "../../services/tapis";
 
@@ -1205,6 +1206,13 @@ function JobSetupDrawer({
         <pre className="args-preview">
           {argsPreview()}
         </pre>
+
+        <div className="args-target">
+          scheduler:{" "}
+          {buildSchedulerOptions()
+            .map((option) => option.arg)
+            .join(" ")}
+        </div>
       </section>
 
 
