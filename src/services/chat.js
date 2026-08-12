@@ -1,3 +1,7 @@
+import {
+  tapisFetch,
+} from "./auth";
+
 const USE_MOCK_SERVICES =
   import.meta.env.VITE_USE_MOCK_SERVICES !== "false";
 
@@ -33,7 +37,7 @@ export async function sendChatMessage({
     };
   }
 
-  const response = await fetch(
+  const response = await tapisFetch(
     `${CHAT_API_URL}/chat`,
     {
       method: "POST",
