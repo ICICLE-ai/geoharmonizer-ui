@@ -23,7 +23,7 @@ function TopBar({
 
         <div>
           <div className="brand-name">
-            GeoHarmonizer
+            Earth Data Hub
           </div>
 
           <div className="brand-subtitle">
