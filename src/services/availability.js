@@ -30,9 +30,12 @@ export async function checkAvailability(jobSpec) {
     return MOCK_AVAILABILITY;
   }
 
+  // The availability service takes the selection's bbox directly —
+  // a registered-AOI (aoi_id) lookup store is v1.1.
   const params = new URLSearchParams({
-    aoi_id:
-      jobSpec.aoi?.aoi_id ?? "",
+    bbox: (jobSpec.aoi?.bbox ?? [])
+      .map((v) => Number(v.toFixed(6)))
+      .join(","),
 
     start:
       jobSpec.startDate,
