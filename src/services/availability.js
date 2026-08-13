@@ -1,7 +1,3 @@
-import {
-  tapisFetch,
-} from "./auth";
-
 const USE_MOCK_SERVICES =
   import.meta.env.VITE_USE_MOCK_SERVICES !== "false";
 
@@ -48,7 +44,7 @@ export async function checkAvailability(jobSpec) {
       String(jobSpec.cloudMax),
   });
 
-  const response = await tapisFetch(
+  const response = await fetch(
     `${AVAILABILITY_API_URL}/availability?${params.toString()}`
   );
 
