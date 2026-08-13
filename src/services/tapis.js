@@ -55,9 +55,16 @@ export function buildCollectArgs(jobSpec) {
     const feature = toAoiFeature(features);
 
     if (feature) {
+      /*
+       * Tapis inserts appArgs verbatim into the generated bash wrapper,
+       * so raw JSON is shredded by quote removal + brace expansion.
+       * Single-quote it (escaping embedded single quotes) per the Tapis
+       * jobs docs: values must arrive shell-safe from the submitter.
+       */
+      const json = JSON.stringify(feature);
       args.push(
         "--aoi-json",
-        JSON.stringify(feature)
+        `'${json.replace(/'/g, `'\\''`)}'`
       );
     }
   } else if (jobSpec.aoi?.bbox) {
