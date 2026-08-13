@@ -5,9 +5,7 @@ import {
 import "./App.css";
 
 import TopBar from "./components/layout/TopBar";
-import MapViewer, {
-  MOCK_FIELDS,
-} from "./components/map/MapViewer";
+import MapViewer from "./components/map/MapViewer";
 import JobSetupDrawer from "./components/job/JobSetupDrawer";
 import ChatDrawer from "./components/chat/ChatDrawer";
 import JobsPage from "./components/jobs/JobsPage";
@@ -15,6 +13,10 @@ import JobsPage from "./components/jobs/JobsPage";
 import {
   initialJobSpec,
 } from "./state/jobSpec";
+
+import {
+  featureCollectionBounds,
+} from "./utils/geometry";
 
 function App() {
   const [
@@ -82,79 +84,96 @@ function App() {
   });
 };
 
-  const handleSelectionChange =
-    (nextIds) => {
-      setSelectedIds(
-        nextIds
+  /*
+   * The map owns the uploaded boundaries, so it hands back the
+   * selected GeoJSON features alongside their ids.
+   */
+  const handleSelectionChange = (
+    nextIds,
+    nextFeatures = []
+  ) => {
+    setSelectedIds(
+      nextIds
+    );
+
+    if (
+      nextFeatures.length === 0
+    ) {
+      updateJobSpec({
+        aoi: null,
+      });
+
+      return;
+    }
+
+    const totalArea =
+      nextFeatures.reduce(
+        (
+          sum,
+          feature
+        ) =>
+          sum +
+          (feature.__gh
+            ?.areaKm2 ?? 0),
+        0
       );
 
-      const fields =
-        MOCK_FIELDS.filter(
-          (field) =>
-            nextIds.includes(
-              field.id
-            )
-        );
+    const names =
+      nextFeatures.map(
+        (feature) =>
+          feature.__gh?.name ??
+          "Feature"
+      );
 
-      if (
-        fields.length === 0
-      ) {
-        updateJobSpec({
-          aoi: null,
-        });
+    const label =
+      names.length > 3
+        ? `${names
+            .slice(0, 3)
+            .join(", ")} +${
+            names.length - 3
+          } more`
+        : names.join(", ");
 
-        return;
-      }
+    updateJobSpec({
+      aoi: {
+        aoi_id:
+          "upload-selection",
 
-      const totalArea =
-        fields.reduce(
-          (
-            sum,
-            field
-          ) =>
-            sum +
-            field.area,
-          0
-        );
+        /* W,S,E,N in EPSG:4326 — feeds --bbox. */
+        bbox:
+          featureCollectionBounds(
+            nextFeatures
+          ),
 
-      updateJobSpec({
-        aoi: {
-          aoi_id:
-            "mock-aoi-selection",
+        geojson: {
+          type: "FeatureCollection",
 
-          geojson: null,
-
-          selected_feature_ids:
-            fields.map(
-              (field) =>
-                field.id
-            ),
-
-          n_features:
-            fields.length,
-
-          area_km2:
-            Number(
-              totalArea.toFixed(
-                1
-              )
-            ),
-
-          label:
-            fields
-              .map(
-                (field) =>
-                  field.name
-              )
-              .join(", "),
+          features:
+            nextFeatures,
         },
 
-        availability:
-          null,
+        selected_feature_ids:
+          nextIds,
 
-        selectedDates: [],
-      });
-    };
+        n_features:
+          nextFeatures.length,
+
+        area_km2:
+          Number(
+            totalArea.toFixed(
+              1
+            )
+          ),
+
+        label,
+      },
+
+      availability:
+        null,
+
+      selectedDates: [],
+    });
+  };
 
   const openDrawer = (
     name
@@ -194,7 +213,18 @@ function App() {
       />
 
       <div className="main-workspace">
-        {view === "map" ? (
+        {/*
+          * The map stays mounted while other views are open, so
+          * uploaded layers — and the current pan/zoom — are still
+          * there when the user comes back.
+          */}
+        <div
+          className={`view-pane ${
+            view === "map"
+              ? ""
+              : "view-pane-hidden"
+          }`}
+        >
           <MapViewer
             selectedIds={
               selectedIds
@@ -211,9 +241,11 @@ function App() {
               )
             }
           />
-        ) : (
+        </div>
+
+        {view === "jobs" ? (
           <JobsPage />
-        )}
+        ) : null}
 
         <JobSetupDrawer
           open={

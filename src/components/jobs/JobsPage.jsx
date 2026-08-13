@@ -39,7 +39,8 @@ function JobsPage() {
       );
 
       setError(
-        "Could not load jobs. Please try again."
+        err?.message ||
+          "Could not load jobs. Please try again."
       );
     } finally {
       setLoading(false);
@@ -72,7 +73,8 @@ function JobsPage() {
 
         if (!cancelled) {
           setError(
-            "Could not load jobs. Please try again."
+            err?.message ||
+              "Could not load jobs. Please try again."
           );
         }
       } finally {
