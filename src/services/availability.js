@@ -1,7 +1,3 @@
-import {
-  tapisFetch,
-} from "./auth";
-
 const USE_MOCK_SERVICES =
   import.meta.env.VITE_USE_MOCK_SERVICES !== "false";
 
@@ -34,9 +30,12 @@ export async function checkAvailability(jobSpec) {
     return MOCK_AVAILABILITY;
   }
 
+  // The availability service takes the selection's bbox directly —
+  // a registered-AOI (aoi_id) lookup store is v1.1.
   const params = new URLSearchParams({
-    aoi_id:
-      jobSpec.aoi?.aoi_id ?? "",
+    bbox: (jobSpec.aoi?.bbox ?? [])
+      .map((v) => Number(v.toFixed(6)))
+      .join(","),
 
     start:
       jobSpec.startDate,
@@ -48,7 +47,7 @@ export async function checkAvailability(jobSpec) {
       String(jobSpec.cloudMax),
   });
 
-  const response = await tapisFetch(
+  const response = await fetch(
     `${AVAILABILITY_API_URL}/availability?${params.toString()}`
   );
 

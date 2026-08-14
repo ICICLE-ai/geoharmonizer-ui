@@ -115,12 +115,27 @@ function ChatDrawer({
             text:
               response.reply,
           },
+          ...(response.warnings ||
+            []).map(
+            (warning) => ({
+              role:
+                "assistant",
+              text: `⚠ ${warning}`,
+            })
+          ),
         ]
       );
 
+      const suggestion =
+        response.field_suggestions;
+
       setPendingSuggestion(
-        response.field_suggestions ||
-          null
+        suggestion &&
+          Object.keys(
+            suggestion
+          ).length > 0
+          ? suggestion
+          : null
       );
     } catch {
       setMessages(
@@ -265,6 +280,20 @@ function ChatDrawer({
                     pendingSuggestion.cloudMax
                   }
                   %
+                </strong>
+              </div>
+            )}
+
+            {pendingSuggestion.outputName && (
+              <div className="suggestion-row">
+                <span>
+                  Output
+                </span>
+
+                <strong>
+                  {
+                    pendingSuggestion.outputName
+                  }
                 </strong>
               </div>
             )}
