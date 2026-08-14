@@ -18,6 +18,10 @@ import {
   featureCollectionBounds,
 } from "./utils/geometry";
 
+import {
+  CHAT_ENABLED,
+} from "./services/chat";
+
 function App() {
   const [
     view,
@@ -210,6 +214,7 @@ function App() {
         onChat={() =>
           openDrawer("chat")
         }
+        showChat={CHAT_ENABLED}
       />
 
       <div className="main-workspace">
@@ -260,18 +265,20 @@ function App() {
           }
         />
 
-        <ChatDrawer
-          open={
-            drawer === "chat"
-          }
-          onClose={() =>
-            setDrawer(null)
-          }
-          jobSpec={jobSpec}
-          onSuggestion={
-            updateJobSpec
-          }
-        />
+        {CHAT_ENABLED ? (
+          <ChatDrawer
+            open={
+              drawer === "chat"
+            }
+            onClose={() =>
+              setDrawer(null)
+            }
+            jobSpec={jobSpec}
+            onSuggestion={
+              updateJobSpec
+            }
+          />
+        ) : null}
       </div>
     </div>
   );
