@@ -3,6 +3,17 @@ const USE_MOCK_SERVICES =
 
 const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL;
 
+// Whether to offer the assistant at all.
+//
+// Without a configured service the assistant can only return canned
+// replies — and those carry field_suggestions that patch the real job
+// spec, so a mock assistant in production hands users fake dates to
+// apply. Show it when a service is configured, or when mocks were
+// asked for explicitly (local development).
+export const CHAT_ENABLED =
+  Boolean(CHAT_API_URL) ||
+  import.meta.env.VITE_USE_MOCK_SERVICES === "true";
+
 // The assist service speaks the RELEASE_V1_MVP_DESIGN §4 contract:
 //   POST {CHAT_API_URL}/assist  {message, form, session_id}
 //     -> {reply, field_suggestions, warnings, missing, tier}

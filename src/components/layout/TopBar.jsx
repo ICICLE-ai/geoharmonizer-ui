@@ -13,6 +13,7 @@ function TopBar({
   onJobSetup,
   onJobs,
   onChat,
+  showChat = true,
 }) {
   return (
     <header className="topbar">
@@ -67,18 +68,21 @@ function TopBar({
         </button>
       </nav>
 
-      <button
-        type="button"
-        className={`chat-launcher ${
-          drawer === "chat"
-            ? "chat-launcher-active"
-            : ""
-        }`}
-        onClick={onChat}
-        aria-label="Open assistant"
-      >
-        <MessageCircle size={18} />
-      </button>
+      {/* Hidden when no assist service is configured. */}
+      {showChat ? (
+        <button
+          type="button"
+          className={`chat-launcher ${
+            drawer === "chat"
+              ? "chat-launcher-active"
+              : ""
+          }`}
+          onClick={onChat}
+          aria-label="Open assistant"
+        >
+          <MessageCircle size={18} />
+        </button>
+      ) : null}
     </header>
   );
 }
