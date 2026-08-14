@@ -1,0 +1,17 @@
+- id: EarthDataHub:1.0.0
+  name: Earth Data Hub
+  owner: Hari
+  primaryThrust: core/CI4AI
+  targetIcicleRelease: 2026-08
+  hasDependentComponents:
+    - related_to: icicleai-tapisui-extension:0.1.0
+      relationship_type: DependsOn
+  componentVersion: 0.1.0
+  publicAccess: true
+  usageDocumentationAvailable: true
+  usageDocumentationUrl: https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/HOW_TO_USE.md
+  developerDocumentationAvailable: false
+  trainingTutorialsAvailable: true
+  trainingTutorialsUrl: https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/HOW_TO_USE.md
+  status: AlphaRelease
+  license: MIT License
