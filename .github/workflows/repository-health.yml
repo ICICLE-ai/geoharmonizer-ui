@@ -39,27 +39,6 @@ jobs:
           done
           exit "$missing"
 
-  build:
-    name: Lint and build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          # Matches the node image the Dockerfile builds with.
-          node-version: "22"
-          cache: npm
-
-      - run: npm ci
-
-      - run: npm run lint
-
-      # No VITE_* values are supplied here. The build must succeed on the
-      # defaults alone, and passing real tenant values would bake them into a
-      # CI artifact that nothing publishes.
-      - run: npm run build
-
   env-example-documented:
     name: VITE_* variables are documented
     runs-on: ubuntu-latest

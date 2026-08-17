@@ -1,0 +1,116 @@
+name: Build
+
+# The point of this workflow is deployment parity. A green run means the same
+# steps that produce the deployed artifact succeeded here first; a red run
+# means the deploy would have failed, and says which stage it failed at:
+#
+#   web    - the bundle does not compile, so there is nothing to deploy
+#   image  - the container does not build for the cluster's architecture
+#   serve  - the image builds but does not answer on the routed port,
+#            which is what reaches users as a 502 from the Tapis ingress
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  web:
+    name: Lint and bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the node image the Dockerfile builds with.
+          node-version: "22"
+          cache: npm
+
+      # `npm ci` rather than `npm install`: it fails on a package-lock.json
+      # that disagrees with package.json, which is itself a deploy blocker.
+      - run: npm ci
+
+      - run: npm run lint
+
+      # No VITE_* values are supplied here. The bundle must build on the
+      # defaults alone, and real tenant values would be inlined into a CI
+      # artifact for no benefit, since nothing publishes this build.
+      - run: npm run build
+
+  image:
+    name: Container image and smoke test
+    needs: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image for the cluster architecture
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          # linux/amd64 explicitly, because the failure this guards against is
+          # an arm64 image built on an Apple Silicon machine that the x86_64
+          # pod hosts cannot run. The runner is amd64, so `load` can hand the
+          # built image to the local daemon for the smoke test below.
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: geoharmonizer-ui:ci
+          # Placeholders. VITE_* values are inlined at build time and this
+          # image is never published, so the real tenant hosts are supplied at
+          # release time instead — see docs/RELEASE_CHECKLIST.md.
+          build-args: |
+            VITE_USE_MOCK_SERVICES=true
+            VITE_TAPIS_API_URL=https://icicle.tapis.io
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Host ports are deliberately in the 15000 range. The container ports are
+      # the ones under test; binding the host side to 5000 or 8080 only invites
+      # a collision with something already on the runner.
+      - name: Serve on the default port (5000)
+        run: |
+          set -euo pipefail
+          docker run -d --name edh-default -p 15000:5000 geoharmonizer-ui:ci
+          ./.github/scripts/wait-for-http.sh http://localhost:15000/ edh-default
+
+      - name: Serve on an overridden port (PORT=8080)
+        # The port is rendered into the nginx config by an envsubst hook at
+        # container start. If that hook ever stops working the container still
+        # starts and still looks healthy, while listening on the wrong port —
+        # which is exactly the shape of a 502 from the Tapis ingress.
+        run: |
+          set -euo pipefail
+          docker run -d --name edh-override -e PORT=8080 -p 15001:8080 geoharmonizer-ui:ci
+          ./.github/scripts/wait-for-http.sh http://localhost:15001/ edh-override
+
+      - name: Verify the SPA deep-link fallback
+        # An unknown path must return the app, not a 404, or a refresh on any
+        # deep link breaks in production.
+        run: |
+          set -euo pipefail
+          status=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:15000/jobs)
+          if [ "$status" != "200" ]; then
+            echo "Deep link /jobs returned $status; expected 200 via try_files fallback."
+            exit 1
+          fi
+
+      - name: Container logs
+        if: always()
+        run: |
+          for name in edh-default edh-override; do
+            echo "::group::$name"
+            docker logs "$name" 2>&1 || echo "container never started"
+            echo "::endgroup::"
+          done
