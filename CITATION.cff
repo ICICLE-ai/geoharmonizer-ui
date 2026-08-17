@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "Earth Data Hub: A Web Interface for Geospatial Data Harmonization on Tapis"
+abstract: "A browser-based interface for uploading geospatial boundaries, previewing them on a map, and submitting harmonization jobs to Tapis-managed HPC execution systems."
+version: "0.1.0"
+# CFF 1.2.0 requires a full YYYY-MM-DD date. Update this to the actual tag date.
+date-released: "2026-08-17"
+license: "MIT"
+authors:
+  - family-names: "Radhakrishnan"
+    given-names: "Aswathnarayan"
+    email: "radhakrishnan.39@osu.edu"
+  - family-names: "Brunda Yogananda"
+    given-names: "Brijesh Nanda"
+    email: "brundayogananda.1@osu.edu"
+  - family-names: "Devarajan Shanmugam"
+    given-names: "Geethasri"
+    email: "devarajanshanmugam.1@osu.edu"
+  - family-names: "Subramoni"
+    given-names: "Hari"
+    email: "subramoni.1@osu.edu"
+  
+  # Contributors identified from the commit history. Confirm spelling and add
+  # institutional emails before the first tagged release.
+
+  
+repository-code: "https://github.com/ICICLE-ai/geoharmonizer-ui"
+keywords:
+  - "open source"
+  - "scientific software"
+  - "ICICLE"
+  - "geospatial"
+  - "data harmonization"
+  - "Tapis"

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability or sensitive exposure
+    url: "https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/SECURITY.md"
+    about: "Report privately using the contact in SECURITY.md. Do not disclose vulnerabilities, credentials, restricted data, or sensitive information in public issues."
+  - name: Setup, deployment, and usage questions
+    url: "https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/README.md"
+    about: "The README covers local development, VITE_* configuration, and deploying the container to Tapis Pods. Use this channel for questions that are not reproducible bugs or contribution proposals."
