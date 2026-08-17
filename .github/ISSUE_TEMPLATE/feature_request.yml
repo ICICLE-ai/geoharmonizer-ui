@@ -1,0 +1,56 @@
+name: Contribution or feature proposal
+description: Propose a bounded, maintainable improvement before opening a substantial pull request.
+title: "[Proposal]: "
+labels: ["proposal"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or user need
+      description: "Describe the need and who is affected."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed contribution
+      description: "Describe expected inputs, outputs, interfaces, and boundaries. For a UI change, describe the screen and the interaction; a sketch or mockup helps."
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area affected
+      multiple: true
+      options:
+        - "Map and boundary upload"
+        - "Job setup and submission"
+        - "Jobs list and status"
+        - "Chat / assistant"
+        - "Authentication and Tapis integration"
+        - "Build, container, or deployment"
+        - "Documentation"
+        - "Other or not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: reuse
+    attributes:
+      label: Reuse and maintenance
+      description: "Explain who may reuse this contribution and who could maintain it."
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Data, licensing, dependency, and security considerations
+      description: "State restrictions, permissions, new dependencies, or risks. If the change needs new configuration, note it — remember that VITE_* values are inlined into the public bundle and can never hold a credential."
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Contribution rights
+      options:
+        - label: "I have the right to propose or contribute the described material under this repository's license."
+          required: true

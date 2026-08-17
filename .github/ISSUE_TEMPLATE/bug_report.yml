@@ -1,0 +1,73 @@
+name: Bug report
+description: Report a reproducible problem in the Earth Data Hub interface.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include credentials, private keys, Tapis tokens, proprietary data, restricted data, sensitive locations, or personally identifiable information. Redact tokens and cookie values before pasting logs, network traces, or screenshots.
+  - type: input
+    id: version
+    attributes:
+      label: Release version or commit
+      placeholder: "e.g., v0.1.0, commit SHA, or the deployed image tag"
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: How were you running it?
+      options:
+        - "Local dev server (npm run dev)"
+        - "Local production build (npm run build + npm run preview)"
+        - "Docker image locally"
+        - "Deployed to Tapis Pods"
+        - "Other"
+    validations:
+      required: true
+  - type: dropdown
+    id: mock
+    attributes:
+      label: Service mode
+      description: "The value of VITE_USE_MOCK_SERVICES for the build you were running."
+      options:
+        - "Live services (VITE_USE_MOCK_SERVICES=false)"
+        - "Mock services (VITE_USE_MOCK_SERVICES=true)"
+        - "Not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "Browser and version, OS, screen size if layout-related, and Node version if the problem is in the build. Do not include token values."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: "Include the input file format (Shapefile, GeoPackage, GeoJSON) and approximate size when the problem involves uploading or rendering a boundary. Do not attach restricted or sensitive data — describe it or supply a synthetic equivalent."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and safe logs/screenshots
+      description: "Browser console errors and failing network requests are the most useful evidence. Redact the X-Tapis-Token header and any cookie values."
+    validations:
+      required: true
+  - type: checkboxes
+    id: data
+    attributes:
+      label: Data and security confirmation
+      options:
+        - label: "I removed credentials, Tapis tokens, private data, proprietary information, and sensitive information."
+          required: true
