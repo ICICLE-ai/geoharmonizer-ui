@@ -1,4 +1,4 @@
-- id: EarthDataHub:1.0.0
+- id: EarthDataHub:0.1.0
   name: Earth Data Hub
   owner: Hari
   primaryThrust: core/CI4AI
@@ -12,6 +12,8 @@
   usageDocumentationUrl: https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/HOW_TO_USE.md
   developerDocumentationAvailable: false
   trainingTutorialsAvailable: true
-  trainingTutorialsUrl: https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/HOW_TO_USE.md
+  targetIcicleRelease: 2026-08
   status: AlphaRelease
-  license: MIT License
+  description: A browser-based interface for uploading geospatial boundaries, previewing them on a map, and submitting data collection and harmonization jobs to Tapis-managed HPC execution systems.
+  licenseUrl: https://github.com/ICICLE-ai/geoharmonizer-ui/blob/main/LICENSE
+  sourceCodeUrl: https://github.com/ICICLE-ai/geoharmonizer-ui
