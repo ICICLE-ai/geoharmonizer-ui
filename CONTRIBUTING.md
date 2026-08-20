@@ -28,9 +28,18 @@ npm run lint              # must pass with no errors
 npm run build             # must succeed; both run in CI
 ```
 
-There is no automated test suite yet. Until one exists, validation means running `lint` and `build` and exercising the affected screen in a browser — including the mock path (`VITE_USE_MOCK_SERVICES=true`) and, where the change touches Tapis, a real tenant. A pull request that adds the first test harness is welcome and should be proposed as an issue first.
-
 Configuration lives in `VITE_*` variables documented in [.env.example](.env.example). Vite inlines these into the public bundle at build time, so none of them may ever hold a credential — see [SECURITY.md](SECURITY.md).
+
+## Testing
+
+There is no automated test suite yet. It is deliberately deferred, and until it exists the evidence that a change works is manual verification recorded in the repository. [docs/TESTING.md](docs/TESTING.md) describes the full model; the flow for a normal change is:
+
+1. Run the local pre-submit checks: `npm ci`, then `npm run lint`, then `npm run build`.
+2. Push, and let CI run the same checks plus the container smoke test, the repository-health checks, and the secret scans.
+3. Exercise the change by hand — happy path, one edge case, one failure case, and a regression check on adjacent behaviour — and write it up by copying [docs/user-tests/TEMPLATE.md](docs/user-tests/TEMPLATE.md) to `docs/user-tests/YYYY-MM-DD-<slug>.md`. Commit it in the same pull request.
+4. For a change to the `Dockerfile`, the nginx template, or the `VITE_*` surface, also build and run the container locally as described in [docs/TESTING.md](docs/TESTING.md).
+
+A pull request is not blocked for missing unit tests. It is blocked for a missing user test document when the change needed one. A pull request that adds the first test harness is welcome and should be proposed as an issue first.
 
 ## Contribution pathway
 

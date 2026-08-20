@@ -6,7 +6,16 @@ A browser-based geospatial data discovery and collection interface with three ma
 2. **Satellite availability** — upload and select an area of interest (AOI), configure collection parameters, and check available satellite scenes.
 3. **HPC collection** — submit GeoHarmonizer collection workflows through [Tapis](https://tapis-project.github.io/live-docs/?service=Jobs) to available HPC resources and monitor their status.
 
-📖 **[HOW_TO_USE.md](HOW_TO_USE.md)** — using the assistant, selecting an AOI, checking satellite availability, and submitting Tapis jobs.
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [HOW_TO_USE.md](HOW_TO_USE.md) | Using the assistant, selecting an AOI, checking satellite availability, and submitting Tapis jobs. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Development setup and pull request expectations. |
+| [docs/TESTING.md](docs/TESTING.md) | How a change is verified before merge and before deployment. |
+| [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) | What must be complete before a public release. |
+| [docs/MAINTAINER_ROLES.md](docs/MAINTAINER_ROLES.md) | Who is responsible for review, release, security, and deployment. |
+| [SECURITY.md](SECURITY.md) | Reporting a vulnerability, and the security properties of a browser-side application. |
 
 ## Architecture
 
