@@ -406,7 +406,7 @@ export async function submitJob(jobSpec) {
 
 
 /*
- * The caller's most recent jobs, newest first.
+ * The caller's most recent `geoharmonizer-collect` jobs, newest first.
  */
 export async function getJobs() {
   const response = await tapisFetch(
@@ -430,5 +430,22 @@ export async function getJobs() {
 
   const data = await response.json();
 
-  return (data?.result ?? []).map(toJobCard);
+  /*
+   * Tapis returns every job the caller has submitted, whatever tool
+   * submitted it. This page only speaks for the collect app, so a job
+   * from anything else is another tool's job and is dropped here.
+   *
+   * appId only, not appId + appVersion: a new version of the app is
+   * still this UI's job and should stay on the list.
+   *
+   * The filter runs after the fetch, so the `limit` above is a window
+   * over all of the caller's jobs rather than over collect jobs alone.
+   * A caller with more than 100 recent jobs from other apps will not
+   * see their older collect jobs here.
+   */
+  return (data?.result ?? [])
+    .filter(
+      (job) => job.appId === APP_ID
+    )
+    .map(toJobCard);
 }
