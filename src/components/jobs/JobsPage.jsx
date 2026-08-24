@@ -249,8 +249,8 @@ function JobsPage() {
 
             <span>
               {filter === "all"
-                ? "No jobs have been submitted yet."
-                : `No ${filter} jobs.`}
+                ? "No collection jobs have been submitted yet."
+                : `No ${filter} collection jobs.`}
             </span>
           </div>
         )}
