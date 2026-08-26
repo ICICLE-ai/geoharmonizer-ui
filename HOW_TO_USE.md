@@ -6,7 +6,7 @@ A browser-based geospatial data discovery and collection interface for selecting
 
 ### License
 
-BSD 3-Clause License
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## References
 
