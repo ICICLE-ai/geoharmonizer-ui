@@ -6,7 +6,7 @@ A browser-based geospatial data discovery and collection interface for selecting
 
 ### License
 
-MIT License
+BSD 3-Clause License
 
 ## References
 
