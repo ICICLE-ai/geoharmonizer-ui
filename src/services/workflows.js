@@ -14,7 +14,15 @@ export const WORKFLOWS_ENABLED =
 // Identity sent with each workflow request. The lake enforces per-user
 // ACLs on private layers (e.g. FMIS yield), so the service needs to know
 // who is asking; a real deployment would take this from the Tapis session.
-const WORKFLOW_USER = "aswathn1";
+// The demo exposes a persona switch so ACL behavior can be shown live.
+export const WORKFLOW_PERSONAS = [
+  { id: "aswathn1", label: "aswathn1 (layer owner)" },
+  { id: "guest", label: "guest (no private access)" },
+];
+let workflowUser = WORKFLOW_PERSONAS[0].id;
+export function setWorkflowUser(user) {
+  workflowUser = user;
+}
 
 // The workflow service speaks the v2 AutoML contract:
 //   POST {WORKFLOW_API_URL}/api/workflow           {task, user}
@@ -41,7 +49,7 @@ function toUiRecord(data, task) {
     id: data.id,
     status: data.status,
     task: data.task ?? task ?? "",
-    selection: data.plan ?? data.selection ?? null,
+    selection: data.plan?.selection ?? data.plan ?? data.selection ?? null,
     curation: data.curation ?? null,
     leaderboard:
       data.leaderboard ?? modelSearch.leaderboard ?? null,
@@ -308,7 +316,7 @@ export async function createWorkflow(task) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       task,
-      user: WORKFLOW_USER,
+      user: workflowUser,
     }),
   });
 

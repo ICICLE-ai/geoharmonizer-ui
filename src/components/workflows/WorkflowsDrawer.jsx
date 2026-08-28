@@ -17,9 +17,11 @@ import {
 import Drawer from "../layout/Drawer";
 
 import {
+  WORKFLOW_PERSONAS,
   confirmWorkflow,
   createWorkflow,
   getWorkflow,
+  setWorkflowUser,
 } from "../../services/workflows";
 
 /* The three tasks the v2 engine documents — one per outcome. */
@@ -307,6 +309,40 @@ function WorkflowsDrawer({
           Task
         </span>
 
+        {/* Demo persona switch: private FMIS layers are ACL'd per user,
+            so the same question can succeed for an owner and be refused
+            for a guest. A real deployment derives this from the Tapis
+            session instead of a select. */}
+        <label className="wf-persona">
+          Asking as{" "}
+          <select
+            defaultValue={
+              WORKFLOW_PERSONAS[0]
+                .id
+            }
+            onChange={(
+              event
+            ) =>
+              setWorkflowUser(
+                event.target
+                  .value
+              )
+            }
+            aria-label="Requesting user"
+          >
+            {WORKFLOW_PERSONAS.map(
+              (p) => (
+                <option
+                  key={p.id}
+                  value={p.id}
+                >
+                  {p.label}
+                </option>
+              )
+            )}
+          </select>
+        </label>
+
         <div className="wf-compose">
           <input
             value={task}
@@ -576,18 +612,39 @@ function WorkflowsDrawer({
             Leaderboard
           </span>
 
+          {/* Classification runs report agreement/macro-F1; regression
+              runs (e.g. FMIS yield) report R2/MAE. Detect from the rows
+              rather than the task so the table never crashes on a shape
+              it did not expect. */}
           <table className="wf-leaderboard">
             <thead>
               <tr>
                 <th>Family</th>
 
-                <th>
-                  Agreement
-                </th>
+                {record
+                  .leaderboard[0]
+                  ?.held_out_agreement !==
+                undefined ? (
+                  <>
+                    <th>
+                      Agreement
+                    </th>
 
-                <th>
-                  Macro-F1
-                </th>
+                    <th>
+                      Macro-F1
+                    </th>
+                  </>
+                ) : (
+                  <>
+                    <th>
+                      Held-out R²
+                    </th>
+
+                    <th>
+                      MAE (bu/ac)
+                    </th>
+                  </>
+                )}
               </tr>
             </thead>
 
@@ -620,21 +677,43 @@ function WorkflowsDrawer({
                       }
                     </td>
 
-                    <td>
-                      {(
-                        row.held_out_agreement *
-                        100
-                      ).toFixed(
-                        1
-                      )}
-                      %
-                    </td>
+                    {row.held_out_agreement !==
+                    undefined ? (
+                      <>
+                        <td>
+                          {(
+                            row.held_out_agreement *
+                            100
+                          ).toFixed(
+                            1
+                          )}
+                          %
+                        </td>
 
-                    <td>
-                      {row.macro_f1.toFixed(
-                        3
-                      )}
-                    </td>
+                        <td>
+                          {row.macro_f1?.toFixed(
+                            3
+                          ) ??
+                            "—"}
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>
+                          {row.r2?.toFixed(
+                            3
+                          ) ??
+                            "—"}
+                        </td>
+
+                        <td>
+                          {row.mae_bu_ac?.toFixed(
+                            1
+                          ) ??
+                            "—"}
+                        </td>
+                      </>
+                    )}
                   </tr>
                 )
               )}
