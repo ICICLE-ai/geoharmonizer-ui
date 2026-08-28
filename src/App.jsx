@@ -8,6 +8,7 @@ import TopBar from "./components/layout/TopBar";
 import MapViewer from "./components/map/MapViewer";
 import JobSetupDrawer from "./components/job/JobSetupDrawer";
 import ChatDrawer from "./components/chat/ChatDrawer";
+import WorkflowsDrawer from "./components/workflows/WorkflowsDrawer";
 import JobsPage from "./components/jobs/JobsPage";
 
 import {
@@ -21,6 +22,10 @@ import {
 import {
   CHAT_ENABLED,
 } from "./services/chat";
+
+import {
+  WORKFLOWS_ENABLED,
+} from "./services/workflows";
 
 function App() {
   const [
@@ -214,7 +219,13 @@ function App() {
         onChat={() =>
           openDrawer("chat")
         }
+        onWorkflows={() =>
+          openDrawer("workflows")
+        }
         showChat={CHAT_ENABLED}
+        showWorkflows={
+          WORKFLOWS_ENABLED
+        }
       />
 
       <div className="main-workspace">
@@ -276,6 +287,18 @@ function App() {
             jobSpec={jobSpec}
             onSuggestion={
               updateJobSpec
+            }
+          />
+        ) : null}
+
+        {WORKFLOWS_ENABLED ? (
+          <WorkflowsDrawer
+            open={
+              drawer ===
+              "workflows"
+            }
+            onClose={() =>
+              setDrawer(null)
             }
           />
         ) : null}

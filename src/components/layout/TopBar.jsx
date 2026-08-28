@@ -4,6 +4,7 @@ import {
   ListChecks,
   MessageCircle,
   Satellite,
+  Workflow,
 } from "lucide-react";
 
 function TopBar({
@@ -13,7 +14,9 @@ function TopBar({
   onJobSetup,
   onJobs,
   onChat,
+  onWorkflows,
   showChat = true,
+  showWorkflows = true,
 }) {
   return (
     <header className="topbar">
@@ -66,6 +69,20 @@ function TopBar({
           <ListChecks size={15} />
           Jobs
         </button>
+
+        {/* Hidden when no workflow service is configured. */}
+        {showWorkflows ? (
+          <button
+            type="button"
+            className={`nav-button ${
+              drawer === "workflows" ? "active" : ""
+            }`}
+            onClick={onWorkflows}
+          >
+            <Workflow size={15} />
+            AI Workflows
+          </button>
+        ) : null}
       </nav>
 
       {/* Hidden when no assist service is configured. */}
