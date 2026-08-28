@@ -95,6 +95,20 @@ Open the **Jobs** page to view submitted GeoHarmonizer collection jobs.
 
 The Jobs page shows the current status of submitted jobs. Use the available filters and **Refresh** to retrieve the latest information.
 
+## AI Workflows
+
+Open **AI Workflows** to describe a mapping or prediction task in plain language (for example, "map corn and soybeans around molly caren for 2024").
+
+The workflow service compiles the task into a three-stage plan:
+
+1. **Select** — chooses data sources from the registry and checks what the data lake already holds, so months on hand are reused instead of re-collected. Sources that could leak the answer into the features (for example, using the crop-label product as both target and feature) are excluded by the feature gate, and the plan says so.
+2. **Curate** — builds the feature stack from the harmonized cube and aligns the reference layer to the same grid.
+3. **Model** — searches candidate model families under a fixed budget and evaluates them on a spatially disjoint holdout.
+
+**The confirm gate:** compiling a task never runs anything. The drawer shows the plan first — which sources were chosen, how much held data is reused, how many new scenes a collection would need, and the cost note — and the workflow only executes after you click **Confirm & Run**. When it finishes, the drawer shows a leaderboard of the model families that were tried.
+
+**What refusals mean:** a task the service cannot ground is not answered with a guess. Instead it comes back blocked, and the amber card shows the exact data gap and its unblock path — for example, yield prediction is blocked until a data-use agreement covers the private yield-monitor layer, and tillage mapping is blocked because the default collection lacks the SWIR bands it needs. Resolving the stated gap (signing the agreement, re-collecting with the required bands) is what unblocks the task.
+
 ---
 
 # How-To Guides

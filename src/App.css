@@ -1841,6 +1841,340 @@ button:disabled {
 }
 
 /* =========================================
+   AI WORKFLOWS DRAWER
+   ========================================= */
+
+.wf-compose {
+  display: flex;
+
+  gap: 7px;
+}
+
+.wf-compose input {
+  flex: 1;
+
+  padding: 8px 10px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+
+  background: var(--surface);
+
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.wf-compose input:focus {
+  outline: none;
+
+  border-color: var(--accent);
+}
+
+.wf-run {
+  width: 40px;
+
+  padding: 8px;
+}
+
+.wf-chips {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.wf-chip {
+  padding: 6px 9px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: var(--text-dim);
+
+  font-size: 11px;
+
+  text-align: left;
+}
+
+.wf-chip:hover {
+  border-color: var(--accent);
+
+  color: var(--text);
+}
+
+.wf-stage-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.wf-stage {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 7px 9px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+
+  background: var(--surface);
+
+  color: var(--text-dim);
+
+  font-size: 11px;
+}
+
+.wf-stage strong {
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.wf-stage-done svg {
+  color: var(--accent);
+}
+
+.wf-stage-running svg {
+  color: var(--accent);
+}
+
+.wf-stage-blocked {
+  border-color: var(--amber);
+}
+
+.wf-stage-blocked svg {
+  color: var(--amber);
+}
+
+.wf-plan-card {
+  border: 1px solid var(--accent);
+
+  border-radius: 7px;
+
+  background: var(--surface);
+
+  padding: 11px;
+}
+
+.wf-plan-heading {
+  margin-bottom: 9px;
+
+  color: var(--accent);
+
+  font-size: 10px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+}
+
+.wf-plan-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 5px;
+
+  color: var(--text);
+
+  font-size: 11px;
+}
+
+.wf-plan-row span {
+  color: var(--text-dim);
+}
+
+.wf-gate {
+  margin-top: 9px;
+
+  padding-top: 8px;
+
+  border-top: 1px dashed var(--line);
+
+  font-size: 11px;
+}
+
+.wf-gate-decision {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: var(--text);
+}
+
+.wf-gate-decision svg {
+  color: var(--accent);
+
+  flex: 0 0 auto;
+}
+
+.wf-gate-rule {
+  margin-top: 3px;
+
+  color: var(--text-dim);
+}
+
+.wf-optional-gaps {
+  margin-top: 9px;
+
+  color: var(--text-dim);
+
+  font-size: 10px;
+}
+
+.wf-cost-note {
+  margin-top: 9px;
+
+  padding-top: 8px;
+
+  border-top: 1px dashed var(--line);
+
+  color: var(--field);
+
+  font-size: 11px;
+}
+
+.wf-refusal-card {
+  border: 1px solid var(--amber);
+
+  border-radius: 7px;
+
+  background: var(--surface);
+
+  padding: 11px;
+}
+
+.wf-refusal-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-bottom: 9px;
+
+  color: var(--amber);
+
+  font-size: 10px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+}
+
+.wf-gap {
+  color: var(--text-dim);
+
+  font-size: 11px;
+}
+
+.wf-gap + .wf-gap {
+  margin-top: 9px;
+
+  padding-top: 8px;
+
+  border-top: 1px dashed var(--line);
+}
+
+.wf-gap strong {
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.wf-gap-unblock {
+  margin-top: 4px;
+
+  color: var(--amber);
+}
+
+.wf-leaderboard {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: 11px;
+}
+
+.wf-leaderboard th {
+  padding: 5px 7px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text-dim);
+
+  font-weight: 500;
+
+  text-align: left;
+}
+
+.wf-leaderboard td {
+  padding: 5px 7px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text);
+}
+
+.wf-leaderboard td svg {
+  margin-right: 5px;
+
+  vertical-align: -2px;
+
+  color: var(--amber);
+}
+
+.wf-winner td {
+  background: var(--accent-dark);
+
+  color: var(--accent);
+}
+
+.wf-note {
+  margin: 0;
+
+  color: var(--text-dim);
+
+  font-size: 10px;
+
+  font-style: italic;
+}
+
+.wf-confirm-section {
+  margin-top: auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  padding-top: 13px;
+
+  border-top: 1px solid var(--line);
+}
+
+.wf-confirm-section .chat-guardrail {
+  margin: 0;
+}
+
+/* =========================================
    RESPONSIVE
    ========================================= */
 
