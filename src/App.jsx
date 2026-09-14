@@ -9,6 +9,7 @@ import MapViewer from "./components/map/MapViewer";
 import JobSetupDrawer from "./components/job/JobSetupDrawer";
 import ChatDrawer from "./components/chat/ChatDrawer";
 import JobsPage from "./components/jobs/JobsPage";
+import LakeExplorer from "./components/lake/LakeExplorer";
 
 import {
   initialJobSpec,
@@ -211,6 +212,10 @@ function App() {
           setView("jobs");
           setDrawer(null);
         }}
+        onExplore={() => {
+          setView("lake");
+          setDrawer(null);
+        }}
         onChat={() =>
           openDrawer("chat")
         }
@@ -250,6 +255,10 @@ function App() {
 
         {view === "jobs" ? (
           <JobsPage />
+        ) : null}
+
+        {view === "lake" ? (
+          <LakeExplorer />
         ) : null}
 
         <JobSetupDrawer
