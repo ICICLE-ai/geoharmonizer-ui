@@ -4,6 +4,7 @@ import {
   ListChecks,
   MessageCircle,
   Satellite,
+  Grid3x3,
 } from "lucide-react";
 
 function TopBar({
@@ -12,6 +13,7 @@ function TopBar({
   onUpload,
   onJobSetup,
   onJobs,
+  onExplore,
   onChat,
   showChat = true,
 }) {
@@ -65,6 +67,18 @@ function TopBar({
         >
           <ListChecks size={15} />
           Jobs
+        </button>
+
+        {/* Reads the harmonized lake; unrelated to job submission. */}
+        <button
+          type="button"
+          className={`nav-button ${
+            view === "lake" ? "active" : ""
+          }`}
+          onClick={onExplore}
+        >
+          <Grid3x3 size={15} />
+          Explore Lake
         </button>
       </nav>
 
